@@ -1,21 +1,27 @@
-name: Check Secret Value
+name: Test Secret Usage
 
 on:
   workflow_dispatch:  # manual trigger
 
 jobs:
-  check-secret:
+  test-secret:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Confirm secret is available
+      - name: Check secret is set
         run: |
           if [ -z "${{ secrets.QA_PASSWORD }}" ]; then
-            echo "Secret QA_PASSWORD is NOT set or empty."
+            echo "Secret MY_SECRET is missing or empty."
+            exit 1
           else
-            echo "Secret QA_PASSWORD is set!"
+            echo "Secret MY_SECRET is set!"
           fi
 
-      - name: Attempt to print secret (will be masked)
+      - name: Use secret in a command (example)
         run: |
-          echo "The secret value is: ${{ secrets.QA_PASSWORD }}"
+          # Example: just print the length of the secret to confirm it has content
+          secret_length=${#{{ secrets.QA_PASSWORD }}}
+          echo "Secret length is: $secret_length"
+
+          # Replace below with your actual command that uses the secret
+          # some-cli-tool --token "${{ secrets.QA_PASSWORD }}" --do-something
