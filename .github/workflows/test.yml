@@ -1,0 +1,21 @@
+name: Check Secret Value
+
+on:
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Confirm secret is available
+        run: |
+          if [ -z "${{ secrets.QA_PASSWORD }}" ]; then
+            echo "Secret QA_PASSWORD is NOT set or empty."
+          else
+            echo "Secret QA_PASSWORD is set!"
+          fi
+
+      - name: Attempt to print secret (will be masked)
+        run: |
+          echo "The secret value is: ${{ secrets.QA_PASSWORD }}"
